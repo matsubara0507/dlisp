@@ -6,7 +6,7 @@ import std.string;
 import std.ascii;
 import std.variant;
 
-import Exps;
+import Scanner, Exps;
 
 class Parser {
 private:
@@ -16,8 +16,10 @@ private:
 
   Exp read_from_tokens() 
   {
-    if (tokens.length == 0)
-      throw new Exception("error: unexpected EOF while reading");
+    if (tokens.length == 0) {
+      string input = Scanner.Scanner.gen.readln;
+      tokens = input.replace(")", " ) ").replace("(", " ( ").split;
+    }
 
     switch (tokens.front) {
       case "(":
@@ -36,8 +38,10 @@ private:
   {
 	  auto car = read_from_tokens;
 
-    if (tokens.length == 0)
-      throw new Exception("error: unexpected EOF while reading");
+    if (tokens.length == 0) {
+      string input = Scanner.Scanner.gen.readln;
+      tokens = input.replace(")", " ) ").replace("(", " ( ").split;
+    }
 
 	  if (tokens.front != ")")   
 		  return new List(car, make_list);
