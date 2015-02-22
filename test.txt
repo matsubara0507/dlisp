@@ -1,0 +1,1 @@
+(define sum (lambda (n) (cond ((eq n 0) 0) (true (+ n (sum (- n 1)))))))

@@ -24,8 +24,8 @@ public:
     write(">> ");
     if (!file.isOpen)
       return chomp(stdin.readln);
-
     string input = chomp(file.readln);
+    writeln(input);
     if(file.eof)
       file.close;
     return input;

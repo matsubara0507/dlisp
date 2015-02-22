@@ -1,6 +1,7 @@
 import std.stdio;
 import std.string;
 import std.conv;
+import std.array;
 
 import Exps, Primitive;
 import Parser, Scanner;
@@ -27,17 +28,24 @@ int main() {
   Env global_env = new Env();
 
   Exp[string] atom_list;
-  
+
   Scanner scin = Scanner.Scanner.gen;
 
   for (;;) {
-    write("disp");
-    string input = scin.readln;
-
-    if (input == "(exit)")
-      break;
-
     try {
+      write("disp");
+      string input = scin.readln;
+      if (input == "")
+        continue;
+
+      if (input == "(exit)")
+        break;
+
+      string[] inputs = input.replace(")", " ) ").replace("(", " ( ").split;
+      if (inputs[0] == "(" && inputs[1] == "read" && inputs[3] == ")") {
+        scin.set(inputs[2]);
+        continue;
+      }
       Parser parser = Parser.Parser.gen;
       Exp exp = parser.analysis(input);
 
@@ -47,7 +55,7 @@ int main() {
       }	
       exp.eval(global_env).print;
       writeln("");
-    }
+    } 
     catch (Exception ex) {
       writeln(ex.toString);
     }
