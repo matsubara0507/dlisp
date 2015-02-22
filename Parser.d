@@ -2,67 +2,59 @@ import std.conv;
 import std.array;
 import std.stdio;
 
-import Lexer;
+import std.string;
+import std.ascii;
+import std.variant;
+
 import Exps;
 
 class Parser {
 private:
   static Parser obj;
-  Token[] token_list;
+  string[] tokens;
   this() { }
 
-  Exp make_exp() 
+  Exp read_from_tokens() 
   {
-    Token head = token_list.front;
-    Exp exp;
+    if (tokens.length == 0)
+      throw new Exception("error: unexpected EOF while reading");
 
-    switch (head.kind) {
-    case Kind.LPAR:
-      token_list.popFront;
-      exp = make_list;
-      token_list.popFront;
-      break;
-    case Kind.RPAR:
-      return Nil.Nil.gen;
-    default:
-      exp = make_atom;
-    }
-    return exp;
+    switch (tokens.front) {
+      case "(":
+        tokens.popFront;
+			  Exp exp = make_list;
+			  tokens.popFront;
+			  return exp;
+		  case ")":
+			  return Nil.Nil.gen;
+		  default:
+			  return make_atom;
+	  }
   }
 
   Exp make_list() 
   {
-    if (token_list.front.kind == Kind.EOT)
-      throw new Exception("parse error: ) not found");
-      
-    Exp car = make_exp;
+	  auto car = read_from_tokens;
 
-    if (token_list.front.kind != Kind.RPAR)
-      return  new List(car, make_list());
+    if (tokens.length == 0)
+      throw new Exception("error: unexpected EOF while reading");
 
-    return new List(car, Nil.Nil.gen);
+	  if (tokens.front != ")")   
+		  return new List(car, make_list);
+
+	  return new List(car, Nil.Nil.gen);
   }
 
   Exp make_atom() 
   {
-    Token head = token_list.front;
-    
-    Exp exp;
-    switch (head.kind) {
-    case Kind.NUMBER:
-	exp = Num.Num.gen(to!real(head.value));
-      break;
-    case Kind.LETTER:
-	exp = Symbol.Symbol.gen(head.value);
-      break;
-    default:
-      throw new Exception("token is not mache");
-    }
-    token_list.popFront;
+	  string head = tokens.front;
+	  tokens.popFront;
+	
+    if (isDigit(head[0])) 
+		  return Num.Num.gen(to!real(head));
 
-    return exp;
+	  return Symbol.Symbol.gen(head);
   }
-
 
 public:
   static this() {
@@ -73,27 +65,14 @@ public:
     return obj;
   }
 
-  Exp analysis(Token[] tlist)
+  Exp analysis(string program)
   {
-    token_list = tlist;
+    tokens = program.replace(")", " ) ").replace("(", " ( ").split;
+    Exp exp = read_from_tokens;
 
-    Exp temp = make_exp;
-    
-    if (token_list.front.kind == Kind.EOT)
-      return temp;
-    else
-      throw new Exception("parse error: EOT not found");
-  }
+    if (tokens.length != 0)
+      throw new Exception("error: unexpected )");
 
-  unittest {
-    Lexer   lexer  = Lexer.Lexer.gen();
-    Parser  parser = Parser.gen();
-    
-    Token[] testi = lexer.analysis("(");
-
-    assert(testi[0].kind == Kind.LPAR);
-    assert(testi[1].kind == Kind.EOT);
-
-    parser.analysis(testi);
+    return exp;
   }
 }

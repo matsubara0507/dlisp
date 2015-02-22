@@ -3,7 +3,7 @@ import std.string;
 import std.conv;
 
 import Exps, Primitive;
-import Lexer, Parser;
+import Parser;
 
 int main() {
   Env.Env.set_reserved("true", True.True.gen);
@@ -31,20 +31,17 @@ int main() {
   for (;;) {
     write("disp>> ");
     string input = chomp(readln());
-    
+
     if (input == "(exit)")
       break;
-    
-    Lexer lexer = Lexer.Lexer.gen;
-    Token[] token_list = lexer.analysis(input);
 
     try {
       Parser parser = Parser.Parser.gen;
-      Exp exp = parser.analysis(token_list);
+      Exp exp = parser.analysis(input);
 
       if (exp is null) {
-	writeln("null!!");
-	continue;
+        writeln("null!!");
+        continue;
       }	
       exp.eval(global_env).print;
       writeln("");
@@ -53,6 +50,6 @@ int main() {
       writeln(ex.toString);
     }
   }
-  
+
   return 0;
 }
