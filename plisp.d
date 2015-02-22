@@ -3,7 +3,7 @@ import std.string;
 import std.conv;
 
 import Exps, Primitive;
-import Parser;
+import Parser, Scanner;
 
 int main() {
   Env.Env.set_reserved("true", True.True.gen);
@@ -27,10 +27,12 @@ int main() {
   Env global_env = new Env();
 
   Exp[string] atom_list;
+  
+  Scanner scin = Scanner.Scanner.gen;
 
   for (;;) {
-    write("disp>> ");
-    string input = chomp(readln());
+    write("disp");
+    string input = scin.readln;
 
     if (input == "(exit)")
       break;
