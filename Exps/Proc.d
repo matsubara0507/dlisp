@@ -25,16 +25,15 @@ class Proc : List {
     if (exp != Nil.Nil.gen)
       args = make_evlist(exp, env);
 
-    env.add_frame(super.exp1, args);
+    env = env.pairlis(super.exp1, args);
     Exp temp = super.exp2.eval(env);
-    env.pop;
     return temp;
   }
 
   override void print(){
-    write("(");
+    write("<");
     super.exp2.print;
-    write(")");
+    write(">");
   }
 
   override Exp eq(Exp exp) 

@@ -12,10 +12,14 @@ abstract class Exp {
   Exp cdr();
 
   real value() {
-    throw new Exception("error :  this exp is not number"); 
+    throw new Exception("error: this exp is not number"); 
   }
 
   string name() {
-    throw new Exception("error :  this exp is not symbol"); 
+    throw new Exception("error: this exp is not symbol"); 
+  }
+
+  Exp assoc(Exp symbol) {
+    throw new Exception("error: this exp is not environment");
   }
 }

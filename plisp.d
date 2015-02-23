@@ -25,7 +25,7 @@ int main() {
   Env.Env.set_reserved("*", ProcMul.ProcMul.gen);
   Env.Env.set_reserved("/", ProcDiv.ProcDiv.gen);
 
-  Env global_env = new Env();
+  Env global_env = new Env(Nil.Nil.gen, Nil.Nil.gen);
 
   Exp[string] atom_list;
 

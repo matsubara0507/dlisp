@@ -1,69 +1,59 @@
 import std.stdio;
+import std.conv;
 import Exp, List, Nil;
 
-class Env {
+class Env : List {
 private:
   static Exp[string] reserved;
-  Exp env_list;
 
 public:
-  this() { 
-    env_list = new List(Nil.Nil.gen, Nil.Nil.gen);
+  this(Exp e1, Exp e2) { 
+    super(e1, e2);
   }
 
   static void set_reserved(string k, Exp v) {
     reserved[k] =  v;
   }
 
-  void add_frame(Exp args, Exp exp) {
-    Exp frame = Nil.Nil.gen;
-    Exp arg  = args.car;
-    Exp next = args;
-
-    if (arg != Nil.Nil.gen) {
-      do {
-        arg  = next.car;
-        next = next.cdr;
-        if (arg.name in reserved)
-          throw new Exception("error: " ~ arg.name ~ " is reserved word");   
-
-        frame = frame.cons(arg.cons(exp.car));
-        exp = exp.cdr;
-      } while (next != Nil.Nil.gen);
-    }
-
-    if (exp != Nil.Nil.gen) 
-      throw new Exception("error: over arguments");
-    env_list = env_list.cons(frame);
-  }
-
-  void pop() {
-    env_list = env_list.car;
-  }
-
-  void set(Exp symbol, Exp exp) 
+  Exp set(Exp symbol, Exp exp) 
   {
     if (symbol.name in reserved)
-      throw new Exception("error: " ~ symbol.name ~ " is reserved word");   
-    env_list = env_list.car.cons(env_list.cdr.cons(symbol.cons(exp))); 
+      throw new Exception("error: " ~ symbol.name ~ " is reserved word");
+    super.exp1 = new Env(this.car, this.cdr);
+    super.exp2 = symbol.cons(exp);
+
+    return symbol;
   }
 
-  Exp get(Exp symbol) 
+  Exp assoc(Exp symbol) 
   {
     if (symbol.name in reserved)
       return reserved[symbol.name];
 
-    Exp next  = env_list;
-    do {
-      Exp frame = next.cdr;
-      next = next.car;
-      while (frame != Nil.Nil.gen) {
-        if (frame.cdr.car == symbol) 
-          return frame.cdr.cdr;
-        frame = frame.car;
-      }
-    } while (next != Nil.Nil.gen);
+    if (this.cdr == Nil.Nil.gen)
+      throw new Exception("error: " ~ symbol.name ~ " is not match");
 
-    return null;
+    if (this.cdr.car == symbol)
+      return this.cdr.cdr;
+    
+    return this.car.assoc(symbol);
+  }
+
+  Env pairlis(Exp symbols, Exp values) 
+  {
+    if (symbols == Nil.Nil.gen) {
+      if (values != Nil.Nil.gen)
+        throw new Exception("error: over arguments");
+      return this;
+    }
+
+    if (symbols.car == Nil.Nil.gen) {
+      if (values != Nil.Nil.gen)
+        throw new Exception("error: over arguments");
+      return this;
+    }
+
+    return new Env(this.pairlis(symbols.cdr, values.cdr), 
+                   new List(symbols.car, values.car));
   }
 }
