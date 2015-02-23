@@ -1,1 +1,10 @@
 (define sum (lambda (n) (cond ((eq n 0) 0) (true (+ n (sum (- n 1)))))))
+
+(define force (lambda (delayed-object) (delayed-object)))
+(define stream-car (lambda (stream) (car stream)))
+(define stream-cdr (lambda (stream) (force (cdr stream))))
+
+(define integers-starting-from (lambda (n) 
+  (cons n (lambda () (integers-starting-from (+ n 1))))))
+(define integers (integers-starting-from 1))
+

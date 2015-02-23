@@ -42,7 +42,7 @@ int main() {
         break;
 
       string[] inputs = input.replace(")", " ) ").replace("(", " ( ").split;
-      if (inputs[0] == "(" && inputs[1] == "read" && inputs[3] == ")") {
+      if (inputs[0] == "(" && inputs[1] == "load" && inputs[3] == ")") {
         scin.set(inputs[2]);
         continue;
       }
