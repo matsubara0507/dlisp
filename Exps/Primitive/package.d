@@ -12,3 +12,5 @@ public import ProcAdd;
 public import ProcSub;
 public import ProcMul;
 public import ProcDiv;
+
+public import ProcSlt;

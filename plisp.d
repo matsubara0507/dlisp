@@ -25,6 +25,8 @@ int main() {
   Env.Env.set_global_env("*", ProcMul.ProcMul.gen);
   Env.Env.set_global_env("/", ProcDiv.ProcDiv.gen);
 
+  Env.Env.set_global_env("<", ProcSlt.ProcSlt.gen);
+
   Env env = new Env(Nil.Nil.gen, Nil.Nil.gen);
 
   Scanner scin = Scanner.Scanner.gen;
