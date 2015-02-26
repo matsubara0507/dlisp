@@ -8,3 +8,52 @@
   (cons n (lambda () (integers-starting-from (+ n 1))))))
 (define integers (integers-starting-from 1))
 
+(define the-empty-stream (quote ()))
+(define stream-null (lambda (s) (eq s (quote ()))))
+
+(define stream-ref (lambda (stream n)
+  (cond ((eq n 0) (stream-car stream))
+        (true (stream-ref (stream-cdr stream) (- n 1))))))
+
+(define stream-map (lambda (proc s)
+  (cond ((stream-null s) the-empty-stream)
+        (true (cons (proc (stream-car s))
+                    (lambda () (stream-map proc (stream-cdr s))))))))
+
+(define stream-map2 (lambda (proc s1 s2)
+  (cond ((stream-null s1) the-empty-stream)
+        (true (cons (proc (stream-car s1) (stream-car s2))
+                    (lambda () (stream-map2 proc 
+                                 (stream-cdr s1) (stream-cdr s2))))))))
+
+(define scale-stream (lambda (stream factor)
+  (stream-map (lambda (x) (* x factor)) stream)))
+
+(define add-stream (lambda (s1 s2) (stream-map2 + s1 s2)))
+
+(define partial-sums (lambda (s)
+  (cons (stream-car s)
+        (lambda () (add-stream (partial-sums s) (stream-cdr s))))))
+
+(define pi-summands (lambda (n)
+  (cons (/ 1.0 n) (lambda () (stream-map - (pi-summands (+ n 2)))))))
+
+(define pi-stream 
+  (scale-stream (partial-sums (pi-summands 1)) 4))
+
+(define euler-transform (lambda (s)
+  ((lambda (s0 s1 s2) (cons (- s2 (/ (* (- s2 s1) (- s2 s1))
+                                     (+ s0 (- (* 2 s1)) s2)))
+                            (lambda () (euler-transform (stream-cdr s)))))
+   (stream-ref s 0) (stream-ref s 1) (stream-ref s 2))))
+
+(define product (lambda (n) (cond ((eq n 0) 1) 
+                                  (true (* n (product (- n 1)))))))
+
+(define e-proc (lambda (n) (cond ((< n 0) (- (/ 1.0 (product (- n))))) 
+			   (true (/ 1.0 (product n))))))
+
+(define e-summands (lambda (n)
+  (cons (e-proc n) (lambda () (stream-map - (e-summands (+ n 1)))))))
+
+(define e-stream (partial-sums (e-summands 0)))
