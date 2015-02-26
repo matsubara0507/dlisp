@@ -23,7 +23,7 @@ class Symbol : Atom {
 
   override Exp eval(Env env) 
   {
-    Exp exp = env.assoc(this);
+    Exp exp = env.lookup(this);
     if (exp is null)
       throw new Exception("error: " ~ key_name ~ " is undefined");
     return exp;

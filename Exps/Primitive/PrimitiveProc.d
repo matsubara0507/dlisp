@@ -1,4 +1,3 @@
-import std.stdio;
 import Exp, Env;
 
 abstract class PrimitiveProc : Exp {
@@ -8,14 +7,6 @@ abstract class PrimitiveProc : Exp {
   }
 
   override Exp atom() {
-    throw new Exception("error : function is undefined"); 
-  }
-
-  override Exp eq(Exp exp) { 
-    throw new Exception("error : function is undefined"); 
-  }
-
-  override Exp cons(Exp cdr) { 
     throw new Exception("error : function is undefined"); 
   }
 

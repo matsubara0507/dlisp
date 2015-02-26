@@ -1,21 +1,21 @@
 import std.stdio;
-import Exp, True, Nil, Env, PrimitiveProc;
+import Exp, True, Nil, Env, SyntaxProc;
 
-class ProcQuote : PrimitiveProc {
+class Quote : SyntaxProc {
  private:
-  static ProcQuote obj;
+  static Quote obj;
   this() { }
 
  public:
   static this() {
-    ProcQuote.obj = new ProcQuote();
+    Quote.obj = new Quote();
   }
 
-  static ProcQuote gen() {
+  static Quote gen() {
     return obj;
   }
 
-  override Exp apply(Exp exp, Env env)
+  static Exp quote(Exp exp, Env env)
   {
     if (exp.cdr != Nil.Nil.gen)
       throw new Exception("error: quote is over arguments");

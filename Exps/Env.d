@@ -1,45 +1,48 @@
-import std.stdio;
-import std.conv;
 import Exp, List, Nil;
 
 class Env : List {
 private:
-  static Exp[string] reserved;
+  static Exp[string] global_env;
+
+  Exp assoc(Exp symbol, Exp env) 
+  {
+    if (env.cdr == Nil.Nil.gen)
+      return null;
+
+    if (env.cdr.car == symbol)
+      return env.cdr.cdr;
+    return assoc(symbol, env.car);
+  }
 
 public:
   this(Exp e1, Exp e2) { 
     super(e1, e2);
   }
 
-  static void set_reserved(string k, Exp v) {
-    reserved[k] =  v;
+  static void set_global_env(string k, Exp v) {
+    global_env[k] =  v;
   }
 
   Exp set(Exp symbol, Exp exp) 
   {
-    if (symbol.name in reserved)
-      throw new Exception("error: " ~ symbol.name ~ " is reserved word");
     super.exp1 = new Env(this.car, this.cdr);
-    super.exp2 = symbol.cons(exp);
+    super.exp2 = new List(symbol, exp);
 
     return symbol;
   }
 
-  Exp assoc(Exp symbol) 
+  Exp lookup(Exp symbol) 
   {
-    if (symbol.name in reserved)
-      return reserved[symbol.name];
+    Exp value = assoc(symbol, this);
+    if (!(value is null))
+      return value;
+    if (symbol.name in global_env)
+      return global_env[symbol.name];
 
-    if (this.cdr == Nil.Nil.gen)
-      throw new Exception("error: " ~ symbol.name ~ " is not match");
-
-    if (this.cdr.car == symbol)
-      return this.cdr.cdr;
-    
-    return this.car.assoc(symbol);
+    throw new Exception("error: " ~ symbol.name ~ " is not match");
   }
 
-  Env pairlis(Exp symbols, Exp values) 
+  Env pairlist(Exp symbols, Exp values) 
   {
     if (symbols == Nil.Nil.gen) {
       if (values != Nil.Nil.gen)
@@ -53,7 +56,7 @@ public:
       return this;
     }
 
-    return new Env(this.pairlis(symbols.cdr, values.cdr), 
+    return new Env(this.pairlist(symbols.cdr, values.cdr), 
                    new List(symbols.car, values.car));
   }
 }

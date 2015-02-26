@@ -12,4 +12,4 @@ public import List;
 
 public import Env;
 
-public import Proc;
+public import Closure;

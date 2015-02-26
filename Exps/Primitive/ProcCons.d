@@ -1,4 +1,3 @@
-import std.stdio;
 import Exp, True, Nil, Env, PrimitiveProc;
 
 class ProcCons : PrimitiveProc {
@@ -15,14 +14,11 @@ class ProcCons : PrimitiveProc {
     return obj;
   }
 
-  override Exp apply(Exp exp, Env env)
+  override Exp apply(Exp actuals)
   {
-    if (exp.cdr.cdr != Nil.Nil.gen)
+    if (actuals.cdr.cdr != Nil.Nil.gen)
       throw new Exception("error: over arguments");
-   
-    Exp car = exp.car.eval(env);
-    Exp cdr = exp.cdr.car.eval(env);
-    
-    return car.cons(cdr);
+
+    return new List(actuals.car, actuals.cdr.car);
   }
 }

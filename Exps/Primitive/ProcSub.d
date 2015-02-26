@@ -1,4 +1,3 @@
-import std.stdio;
 import Exp, Env, Num, True, Nil, PrimitiveProc;
 
 class ProcSub : PrimitiveProc {
@@ -15,11 +14,12 @@ class ProcSub : PrimitiveProc {
     return obj;
   }
 
-  override Exp apply(Exp exp, Env env) {
-    Exp arg  = exp.car;
-    Exp next = exp.cdr;
+  override Exp apply(Exp actuals) 
+  {
+    Exp arg  = actuals.car;
+    Exp next = actuals.cdr;
 
-    real sum = arg.eval(env).value;
+    real sum = arg.value;
 
     if (next == Nil.Nil.gen)
       return Num.Num.gen(-1 * sum);
@@ -28,7 +28,7 @@ class ProcSub : PrimitiveProc {
       arg  = next.car;
       next = next.cdr;  
 
-      sum -= arg.eval(env).value;
+      sum -= arg.value;
     }      
     return Num.Num.gen(sum);
   }

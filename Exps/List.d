@@ -1,22 +1,46 @@
 import std.stdio;
-import Exp, Nil, True, Env;
+import Exp, Nil, True, Env, Syntax;
 
 class List : Exp {
- protected:
+protected:
   Exp exp1;
   Exp exp2;
 
- public:
+private:
+  Exp make_evlist(Exp exp, Env env) 
+  {
+    if (exp == Nil.Nil.gen)
+      return exp;
+    else
+      return new List(exp.car.eval(env), make_evlist(exp.cdr, env));
+  }
+
+public:
   this (Exp e1, Exp e2) {
     exp1 = e1;
     exp2 = e2;
   }
-  
-  override Exp eval(Env env) { 
-    return exp1.eval(env).apply(exp2, env);
+
+  override Exp eval(Env env) 
+  {
+    Exp procedure = exp1.eval(env);
+
+    if (procedure == Cond.Cond.gen)
+      return Cond.Cond.cond(exp2, env);
+
+    if (procedure == Define.Define.gen)
+      return Define.Define.define(exp2, env);
+
+    if (procedure == Lambda.Lambda.gen)
+      return Lambda.Lambda.lambda(exp2, env);
+
+    if (procedure == Quote.Quote.gen)
+      return Quote.Quote.quote(exp2, env);
+
+    return procedure.apply(make_evlist(exp2, env));
   }
 
-  override Exp apply(Exp exp, Env env) {
+  override Exp apply(Exp actuals) {
     throw new Exception("error: apply is undefined");
   }
 
@@ -31,21 +55,6 @@ class List : Exp {
 
   override Exp atom() {
     return Nil.Nil.gen;
-  }
-
-  override Exp eq(Exp exp) 
-  {
-    if (exp.atom == True.True.gen)
-      return Nil.Nil.gen;
-
-    if (exp1.eq(exp.car) == True.True.gen)
-      return exp.eq(exp.cdr);
-    else
-      return Nil.Nil.gen;
-  }
-  
-  override Exp cons(Exp exp) {
-    return new List(this, exp);
   }
 
   override Exp car() {

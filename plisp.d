@@ -3,31 +3,29 @@ import std.string;
 import std.conv;
 import std.array;
 
-import Exps, Primitive;
+import Exps, Primitive, Syntax;
 import Parser, Scanner;
 
 int main() {
-  Env.Env.set_reserved("true", True.True.gen);
+  Env.Env.set_global_env("true", True.True.gen);
 
-  Env.Env.set_reserved("atom", ProcAtom.ProcAtom.gen);
-  Env.Env.set_reserved("eq"  , ProcEq.ProcEq.gen);
-  Env.Env.set_reserved("cons", ProcCons.ProcCons.gen);
-  Env.Env.set_reserved("car" , ProcCar.ProcCar.gen);
-  Env.Env.set_reserved("cdr" , ProcCdr.ProcCdr.gen);
+  Env.Env.set_global_env("atom", ProcAtom.ProcAtom.gen);
+  Env.Env.set_global_env("eq"  , ProcEq.ProcEq.gen);
+  Env.Env.set_global_env("cons", ProcCons.ProcCons.gen);
+  Env.Env.set_global_env("car" , ProcCar.ProcCar.gen);
+  Env.Env.set_global_env("cdr" , ProcCdr.ProcCdr.gen);
 
-  Env.Env.set_reserved("define", ProcDefine.ProcDefine.gen);
-  Env.Env.set_reserved("quote" , ProcQuote.ProcQuote.gen);
-  Env.Env.set_reserved("cond"  , ProcCond.ProcCond.gen);
-  Env.Env.set_reserved("lambda", ProcLambda.ProcLambda.gen);
+  Env.Env.set_global_env("define", Define.Define.gen);
+  Env.Env.set_global_env("quote" , Quote.Quote.gen);
+  Env.Env.set_global_env("cond"  , Cond.Cond.gen);
+  Env.Env.set_global_env("lambda", Lambda.Lambda.gen);
 
-  Env.Env.set_reserved("+", ProcAdd.ProcAdd.gen);
-  Env.Env.set_reserved("-", ProcSub.ProcSub.gen);
-  Env.Env.set_reserved("*", ProcMul.ProcMul.gen);
-  Env.Env.set_reserved("/", ProcDiv.ProcDiv.gen);
+  Env.Env.set_global_env("+", ProcAdd.ProcAdd.gen);
+  Env.Env.set_global_env("-", ProcSub.ProcSub.gen);
+  Env.Env.set_global_env("*", ProcMul.ProcMul.gen);
+  Env.Env.set_global_env("/", ProcDiv.ProcDiv.gen);
 
-  Env global_env = new Env(Nil.Nil.gen, Nil.Nil.gen);
-
-  Exp[string] atom_list;
+  Env env = new Env(Nil.Nil.gen, Nil.Nil.gen);
 
   Scanner scin = Scanner.Scanner.gen;
 
@@ -53,7 +51,7 @@ int main() {
         writeln("null!!");
         continue;
       }	
-      exp.eval(global_env).print;
+      exp.eval(env).print;
       writeln("");
     } 
     catch (Exception ex) {

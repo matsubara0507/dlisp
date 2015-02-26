@@ -1,4 +1,3 @@
-import std.stdio;
 import Exp, Env, Num, True, Nil, PrimitiveProc;
 
 class ProcDiv : PrimitiveProc {
@@ -15,14 +14,15 @@ class ProcDiv : PrimitiveProc {
     return obj;
   }
 
-  override Exp apply(Exp exp, Env env){
-    Exp arg  = exp.car;
-    Exp next = exp.cdr;
+  override Exp apply(Exp actuals){
+    Exp arg  = actuals.car;
+    Exp next = actuals.cdr;
 
-    real dividend = arg.eval(env).value;
+    real dividend = arg.value;
+
     if (next == Nil.Nil.gen) {
       if (dividend == 0) 
-	throw new Exception("divisor is 0");
+        throw new Exception("divisor is 0");
       return Num.Num.gen(1 / dividend);
     }      
 
@@ -30,9 +30,9 @@ class ProcDiv : PrimitiveProc {
       arg  = next.car;
       next = next.cdr;  
 
-      real divisor = arg.eval(env).value;
+      real divisor = arg.value;
       if (divisor == 0)
-	throw new Exception("divisor is 0");
+        throw new Exception("divisor is 0");
 
       dividend /= divisor;
     }      

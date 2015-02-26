@@ -1,4 +1,3 @@
-import std.stdio;
 import Exp, Nil, Env, PrimitiveProc;
 
 class ProcAtom : PrimitiveProc {
@@ -15,10 +14,11 @@ class ProcAtom : PrimitiveProc {
     return obj;
   }
 
-  override Exp apply(Exp exp, Env env) {
-    if (exp.cdr != Nil.Nil.gen)
+  override Exp apply(Exp actuals) 
+  {
+    if (actuals.cdr != Nil.Nil.gen)
       throw new Exception("error: over arguments");
 
-    return exp.car.eval(env).atom;
+    return actuals.car.atom;
   }
 }

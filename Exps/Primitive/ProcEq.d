@@ -1,4 +1,3 @@
-import std.stdio;
 import Exp, Env, True, Nil, PrimitiveProc;
 
 class ProcEq : PrimitiveProc {
@@ -15,14 +14,13 @@ class ProcEq : PrimitiveProc {
     return obj;
   }
 
-  override Exp apply(Exp exp, Env env)
+  override Exp apply(Exp actuals)
   {
-    if (exp.cdr.cdr != Nil.Nil.gen)
+    if (actuals.cdr.cdr != Nil.Nil.gen)
       throw new Exception("error: over arguments");
-    
-    Exp car = exp.car.eval(env);
-    Exp cdr = exp.cdr.car.eval(env);
-    
-    return car.eq(cdr);
+
+    if (actuals.car == actuals.cdr.car)
+      return True.True.gen;
+    return Nil.Nil.gen;
   }
 }
