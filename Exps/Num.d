@@ -24,6 +24,6 @@ class Num : Atom {
   }
 
   override void print() { 
-    write(val);
+    writef("%.15f", val);
   }
 }
