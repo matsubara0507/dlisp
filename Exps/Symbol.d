@@ -3,6 +3,7 @@ import Exp, Atom, Env;
 
 class Symbol : Atom {
  private:
+  static Symbol[string] list;
   string key_name;
   
   this(string kn) {

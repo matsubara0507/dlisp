@@ -1,8 +1,6 @@
 import Exp, True, Nil, List, Env;
 
-abstract class Atom : Exp{
-  protected static Atom[string] list;
-  
+abstract class Atom : Exp{  
  public:
   override Exp eval(Env env) {
     return this;
