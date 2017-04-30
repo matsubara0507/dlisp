@@ -11,8 +11,8 @@ Implement the closure to use lazy evaluation.
 Sorry, maybe...
 
 ```
-$ dmd plisp.d
-$ ./a
+$  dmd -ofplisp *.d ./**/*.d ./**/**/*.d
+$ ./plisp
 dlisp>> (+ 1 1)
 2
 dlisp>> (load test.txt)
