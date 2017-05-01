@@ -1,4 +1,4 @@
-import Exp;
+import Exp, Env;
 
 class SyntaxProc : Exp {
 public: 

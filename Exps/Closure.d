@@ -1,5 +1,5 @@
 import std.stdio;
-import Exp, List, Env, True;
+import Exp, List, Env, True, Nil;
 
 class Closure : List {
 private:
