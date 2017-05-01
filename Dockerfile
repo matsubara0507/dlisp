@@ -1,7 +1,7 @@
-FROM dlanguage/dmd:latest
+FROM dlanguage/ldc:latest
 
 WORKDIR /root/dlisp
 COPY . /root/dlisp
-RUN dmd -ofplisp *.d ./**/*.d ./**/**/*.d
+RUN ldc2 -ofplisp *.d ./**/*.d ./**/**/*.d
 
 CMD ["./plisp"]
