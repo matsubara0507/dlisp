@@ -18,3 +18,10 @@ dlisp>> (+ 1 1)
 dlisp>> (load test.txt)
 ...
 ```
+
+## Docker
+
+```
+$ docker pull matsubara0507/dlisp
+$ docker run -it --rm dlang plisp
+```
