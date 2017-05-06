@@ -1,0 +1,6 @@
+(/ (stream-ref e-stream 2))
+(/ (stream-ref e-stream 3))
+(/ (stream-ref e-stream 4))
+(/ (stream-ref e-stream 5))
+(/ (stream-ref e-stream 10))
+(/ (stream-ref e-stream 15))

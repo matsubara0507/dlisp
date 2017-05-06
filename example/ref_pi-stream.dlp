@@ -1,0 +1,7 @@
+(stream-ref pi-stream 1)
+(stream-ref pi-stream 5)
+(stream-ref pi-stream 10)
+(stream-ref pi-stream 15)
+(stream-ref pi-stream 20)
+(stream-ref pi-stream 25)
+(stream-ref pi-stream 30)

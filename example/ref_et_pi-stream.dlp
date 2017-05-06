@@ -1,0 +1,6 @@
+(stream-ref (euler-transform pi-stream) 1)
+(stream-ref (euler-transform pi-stream) 2)
+(stream-ref (euler-transform pi-stream) 3)
+(stream-ref (euler-transform pi-stream) 4)
+(stream-ref (euler-transform pi-stream) 10)
+(stream-ref (euler-transform pi-stream) 15)

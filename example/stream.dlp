@@ -1,5 +1,3 @@
-(define sum (lambda (n) (cond ((eq n 0) 0) (true (+ n (sum (- n 1)))))))
-
 (define force (lambda (delayed-object) (delayed-object)))
 (define stream-car (lambda (stream) (car stream)))
 (define stream-cdr (lambda (stream) (force (cdr stream))))
@@ -50,10 +48,32 @@
 (define product (lambda (n) (cond ((eq n 0) 1) 
                                   (true (* n (product (- n 1)))))))
 
-(define e-proc (lambda (n) (cond ((< n 0) (- (/ 1.0 (product (- n))))) 
-			   (true (/ 1.0 (product n))))))
+(define e-proc (lambda (n) (cond ((< n 0) (- (/ (product (- n))))) 
+			   (true (/ (product n))))))
 
 (define e-summands (lambda (n)
   (cons (e-proc n) (lambda () (stream-map - (e-summands (+ n 1)))))))
 
 (define e-stream (partial-sums (e-summands 0)))
+
+(define mod (lambda (a b) (cond ((< a b) a) (true (mod (- a b) b)))))
+
+(define div (lambda (a b) (/ (- a (mod a b)) b)))
+
+(define ones (cons 1 (lambda () ones)))
+
+(define nomalize (lambda (n stream)
+  ((lambda (head right)
+     ((lambda (carry) 
+       (cons carry (lambda () (cons (mod (+ head (stream-car (force right))) n)
+				    (lambda () (stream-cdr (force right)))))))
+     (cond ((< (+ (mod head n) 9) n) (div head n))
+	   (true (div (+ head (stream-car (force right))) n)))))
+   (stream-car stream)
+   (lambda () (nomalize (+ n 1) (stream-cdr stream))))))
+
+(define convert (lambda (x) 
+  (cons (stream-car x) 
+	(lambda () (convert (nomalize 2 (scale-stream (stream-cdr x) 10)))))))
+
+(define napier (convert (cons 2 (lambda () ones))))

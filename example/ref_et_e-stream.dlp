@@ -1,0 +1,6 @@
+(/ (stream-ref (euler-transform e-stream) 1))
+(/ (stream-ref (euler-transform e-stream) 2))
+(/ (stream-ref (euler-transform e-stream) 3))
+(/ (stream-ref (euler-transform e-stream) 4))
+(/ (stream-ref (euler-transform e-stream) 10))
+(/ (stream-ref (euler-transform e-stream) 15))
